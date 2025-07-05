@@ -8,32 +8,35 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   ManyToMany,
-  JoinTable
+  JoinTable,
+  OneToOne,
+  JoinColumn,
 } from "typeorm";
+import { MoviePosterEntity } from "./poster.entity";
 
 export enum Genre {
-    ACTION = 'action',
-    COMEDY = 'comedy',
-    DRAMA = 'drama',
-    HORROR = 'horror'
+  ACTION = "action",
+  COMEDY = "comedy",
+  DRAMA = "drama",
+  HORROR = "horror",
 }
 
 //entity - сущность в БД
 @Entity({ name: "movies" })
 export class MovieEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 128,
     // nullable: true
   })
   title: string;
 
   @Column({
-    type: 'text',
-    nullable: true
+    type: "text",
+    nullable: true,
   })
   description: string;
 
@@ -45,45 +48,55 @@ export class MovieEntity {
   releaseYear: number;
 
   @Column({
-    type: 'decimal',
+    type: "decimal",
     precision: 3,
     scale: 1,
-    default: 0.0
+    default: 0.0,
   })
   rating: number;
 
-  @Column({ 
+  @Column({
     name: "is_available",
-    type: 'boolean',
-    default: false
-   })
+    type: "boolean",
+    default: false,
+  })
   isAvailable: boolean;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: Genre,
-    default: Genre.DRAMA
+    default: Genre.DRAMA,
   })
   genre: Genre;
+
+  @Column({ name: 'poster_id', type: 'uuid', nullable: true })
+  posterId: string;
+
+  @OneToOne(() => MoviePosterEntity, (poster) => poster.movie, {
+    onDelete: "CASCADE",
+    nullable: true
+  })
+  @JoinColumn({ name: 'poster_id' })
+  poster: MoviePosterEntity | null;
 
   @OneToMany(() => ReviewEntity, (review) => review.movie)
   reviews: ReviewEntity[];
 
-  @ManyToMany(() => ActorEntity, actor => actor.movies)
+  @ManyToMany(() => ActorEntity, (actor) => actor.movies)
   @JoinTable({
-    name: 'movie_actors',
-    joinColumn: { name: "movie_id", referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'actor_id', referencedColumnName: 'id' }
+    name: "movie_actors",
+    joinColumn: { name: "movie_id", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "actor_id", referencedColumnName: "id" },
   })
   actors: ActorEntity[];
 
   @CreateDateColumn({
-    name: 'created_at'
+    name: "created_at",
   })
   createdAt: Date;
 
   @UpdateDateColumn({
-    name: 'updated_at'
+    name: "updated_at",
   })
   updatedAt: Date;
 }

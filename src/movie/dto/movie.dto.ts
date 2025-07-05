@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString, Max, Min } from "class-validator";
+import { IsArray, IsInt, IsNotEmpty, IsString, IsUUID, Max, Min } from "class-validator";
 
 export class MovieDto {
   @IsString()
@@ -10,4 +10,11 @@ export class MovieDto {
   @Max(new Date().getFullYear())
   @Min(1888)
   releaseYear: number;
+
+  @IsString()
+  imageUrl: string;
+
+  @IsArray()
+  @IsUUID('4', { each: true })
+  actorIds: string[];
 }

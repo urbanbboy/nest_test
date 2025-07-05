@@ -18,7 +18,7 @@ export class ReviewService {
 
     const movie = await this.movieService.findById(movieId)
 
-    const review = this.reviewRepository.create({ text, rating, movie })
+    const review = this.reviewRepository.create({ text, rating, movie, movieId })
 
     return await this.reviewRepository.save(review);
   }
