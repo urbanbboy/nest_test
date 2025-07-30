@@ -6,8 +6,8 @@ import { CreateReviewDto } from './dto/create-review.dto';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @Post()
-  async create(@Body() dto: CreateReviewDto) {
-    return this.reviewService.create(dto)
-  }
+  // @Post()
+  // async create(@Body() dto: CreateReviewDto) {
+  //   return this.reviewService.create(dto)
+  // }
 }
